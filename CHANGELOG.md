@@ -18,6 +18,21 @@ All notable changes to this project are documented here. Format follows
   Tools, Agents, Import Process, Safety & Disputes) could grow wider
   than the viewport on mobile instead of collapsing to one column,
   causing horizontal scroll/clipped content on phones
+- Glossary term accordions and import-checklist stage headers were
+  mouse-only (no `tabindex`, no keydown handler) — keyboard users
+  couldn't focus or toggle them. Added Enter/Space activation and
+  synced `aria-expanded` state
+- Filter result count ("X / Y shown") now has `aria-live="polite"` so
+  screen readers announce changes when filtering categories
+- `--t3` (tertiary text color, used for category descriptions, market
+  names, platform URLs, and shipping notes) failed WCAG AA contrast in
+  both themes (as low as 1.7:1 against card backgrounds). Replaced
+  with values verified to pass 4.5:1+ against every background it
+  renders on
+- `--t2` (secondary text color, used for most body copy) also fell
+  below AA on dark-theme card backgrounds (3.9–4.3:1). Adjusted to
+  pass 6:1+ everywhere while staying visibly brighter than the fixed
+  `--t3`, preserving the text/t2/t3 hierarchy
 
 ## [1.0.0] - 2026-06-20
 
