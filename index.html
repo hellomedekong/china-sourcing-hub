@@ -558,6 +558,8 @@ body.light .cc:hover{box-shadow:0 6px 20px rgba(20,50,110,.12)}
 .ipc{background:var(--s2);border:1px solid var(--bd);border-radius:var(--r);padding:17px;transition:background .3s}
 .ipc.sp{grid-column:1/-1}
 .ipc-t{font-size:8.5px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--gold);margin-bottom:13px}
+.cta-btn{display:inline-block;padding:9px 18px;background:var(--gold);color:#000;border-radius:var(--rsm);font-size:11px;font-weight:800;letter-spacing:.04em;cursor:pointer;transition:opacity .15s}
+.cta-btn:hover{opacity:.88}
 /* Document checklist */
 .doc-progress{background:var(--s1);border-radius:var(--rsm);padding:10px 12px;margin-bottom:12px;display:flex;align-items:center;gap:10px;transition:background .3s}
 .doc-prog-bar{flex:1;height:6px;background:var(--s3);border-radius:3px;overflow:hidden;transition:background .3s}
@@ -2303,9 +2305,19 @@ let totalDocItems=0;
 function renderImportProcess(){
   const el=document.getElementById('import-content');
   if(!el)return;
-  el.innerHTML='<div class="ip-grid">'+docChecklistHTML()+portClearingHTML()+'</div><div class="ip-grid" style="margin-top:14px">'+retailViabilityHTML()+'</div>';
+  el.innerHTML='<div class="ip-grid">'+docChecklistHTML()+portClearingHTML()+'</div><div class="ip-grid" style="margin-top:14px">'+retailViabilityHTML()+'</div><div class="ip-grid" style="margin-top:14px">'+consultCtaHTML()+'</div>';
   initDocChecklist();
   initRetailCalc();
+}
+
+/* ── SOURCING CONSULTATION CTA ────────────────────── */
+function consultCtaHTML(){
+  return '<div class="ipc sp" style="text-align:center">'
+    +'<div class="ipc-t">🤝 Sourcing Support</div>'
+    +'<div class="tc-h">Want This Handled For You?</div>'
+    +'<div class="tc-sub" style="max-width:560px;margin-left:auto;margin-right:auto">Everything above is what we handle directly for clients who\'d rather not navigate it alone — supplier vetting, payment safety, inspection booking, and customs clearing coordination, start to finish. Book a paid consultation and skip the learning curve.</div>'
+    +'<a href="https://wa.me/18035409098" target="_blank" rel="noopener" class="cta-btn">Book a Sourcing Consultation →</a>'
+    +'</div>';
 }
 
 /* ── DOCUMENT CHECKLIST ──────────────────────────── */
