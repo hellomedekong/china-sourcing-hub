@@ -69,7 +69,6 @@ button{cursor:pointer;font-family:inherit}
 .nt.on{color:var(--gold);border-bottom-color:var(--gold)}
 .nb{background:var(--s3);color:var(--t2);font-size:8.5px;padding:1px 5px;border-radius:9px;transition:background .2s,color .2s}
 .nt.on .nb{background:var(--gbg);color:var(--gold)}
-.nnew{background:var(--bbg);color:var(--bud);font-size:7px;font-weight:800;padding:1px 5px;border-radius:9px;text-transform:uppercase;letter-spacing:.06em}
 /* ─── FILTER BAR ────────────────────────────────────────── */
 #fbar{background:var(--s1);border-bottom:1px solid var(--bd);padding:10px 24px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;position:sticky;top:113px;z-index:180;transition:background .3s}
 .sw{position:relative;flex:1;min-width:160px;max-width:280px}
@@ -498,14 +497,6 @@ body.light .cc:hover{box-shadow:0 6px 20px rgba(20,50,110,.12)}
 .vs-val{font-family:'Bricolage Grotesque',sans-serif;font-size:16px;font-weight:700;color:var(--txt);display:block}
 .vs-note{font-size:9.5px;color:var(--t2);margin-top:2px}
 /* Dispute guide */
-.disp-phase{background:var(--s1);border-radius:var(--rmd);overflow:hidden;margin-bottom:8px;border-left:3px solid var(--gold);transition:background .3s}
-.disp-ph{display:flex;align-items:center;gap:10px;padding:11px 13px;cursor:pointer;user-select:none}
-.disp-dt{font-family:'Bricolage Grotesque',sans-serif;font-size:13px;font-weight:700;color:var(--gold);flex-shrink:0;width:90px}
-.disp-title{font-size:11px;font-weight:700;color:var(--txt);flex:1}
-.disp-arr{font-size:11px;color:var(--t3);flex-shrink:0;transition:transform .2s}
-.disp-phase.open .disp-arr{transform:rotate(90deg)}
-.disp-body{display:none;padding:0 13px 12px;border-top:1px solid var(--bd)}
-.disp-phase.open .disp-body{display:block}
 .disp-item{display:flex;gap:8px;padding:7px 0;border-bottom:1px solid var(--bd)}
 .disp-item:last-child{border-bottom:none}
 .disp-ico{font-size:13px;flex-shrink:0;margin-top:1px}
@@ -521,7 +512,6 @@ body.light .cc:hover{box-shadow:0 6px 20px rgba(20,50,110,.12)}
 .oc.bad .oc-h{color:var(--prd)}
 .oc p{font-size:10.5px;color:var(--t2);line-height:1.5}
 /* Banking guide */
-.bank-steps{counter-reset:bstep}
 .bank-step{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--bd)}
 .bank-step:last-child{border-bottom:none}
 .bstep-n{font-family:'Bricolage Grotesque',sans-serif;font-size:20px;font-weight:700;color:var(--gold);line-height:1;flex-shrink:0;width:24px}
@@ -530,11 +520,6 @@ body.light .cc:hover{box-shadow:0 6px 20px rgba(20,50,110,.12)}
 .bank-row{display:flex;gap:8px;padding:7px 10px;background:var(--s1);border-radius:var(--rsm);margin-bottom:5px;align-items:flex-start;transition:background .3s}
 .bank-name{font-size:11px;font-weight:700;color:var(--txt);flex-shrink:0;width:110px}
 .bank-note{font-size:10.5px;color:var(--t2);line-height:1.4}
-.timeline-row{display:flex;gap:10px;padding:7px 0;border-bottom:1px solid var(--bd);align-items:center}
-.timeline-row:last-child{border-bottom:none}
-.tl-day{font-family:'Bricolage Grotesque',sans-serif;font-size:13px;font-weight:700;color:var(--gold);flex-shrink:0;width:65px}
-.tl-label{font-size:11px;font-weight:600;color:var(--txt);flex:1}
-.tl-note{font-size:10px;color:var(--t3)}
 
 
 /* ── QUICK QUOTE BUTTON ────────────────────────── */
@@ -1037,8 +1022,15 @@ const rendered={plats:false,agents:false,logistics:false,buyer:false,tools:false
 function toggleTheme(){
   const isLight=document.body.classList.toggle('light');
   document.getElementById('themeBtn').textContent=isLight?'🌙':'☀️';
+  try{localStorage.setItem('csh_theme',isLight?'light':'dark');}catch(e){}
 }
 document.getElementById('themeBtn').addEventListener('click',toggleTheme);
+try{
+  if(localStorage.getItem('csh_theme')==='light'){
+    document.body.classList.add('light');
+    document.getElementById('themeBtn').textContent='🌙';
+  }
+}catch(e){}
 
 /* ── NAVIGATION ──────────────────────────────────────────── */
 function showP(name){
@@ -1999,6 +1991,7 @@ function containerPlannerHTML(){
       <div class="vol-group"><label class="vol-lbl">Weight per Carton (kg)</label><input class="vol-inp" id="vKG" type="number" placeholder="10" value="10"></div>
     </div>
     <button class="vol-btn" onclick="runVolume()">Calculate →</button>
+    <div class="warn" id="vol-err" style="display:none">Enter a carton length, width, height, and total units ordered to calculate.</div>
     <div class="vol-out" id="vol-out">
       <div class="vol-out-row"><span class="vol-lbl2">Volume per carton</span><span class="vol-val" id="vo-cbm">—</span></div>
       <div class="vol-out-row"><span class="vol-lbl2">Total cartons</span><span class="vol-val" id="vo-ctn">—</span></div>
@@ -2026,7 +2019,15 @@ function runVolume(){
   const upc=parseInt(document.getElementById('vUPC').value)||1;
   const qty=parseInt(document.getElementById('vQTY').value)||0;
   const kg=parseFloat(document.getElementById('vKG').value)||0;
-  if(!L||!W||!H||!qty){return;}
+  const err=document.getElementById('vol-err');
+  if(!L||!W||!H||!qty){
+    if(err)err.style.display='block';
+    document.getElementById('vol-out').style.display='none';
+    document.getElementById('vol-reco').style.display='none';
+    document.getElementById('vol-sizes').style.display='none';
+    return;
+  }
+  if(err)err.style.display='none';
   const cbmPer=(L/100)*(W/100)*(H/100);
   const cartons=Math.ceil(qty/upc);
   const totalCBM=cbmPer*cartons;

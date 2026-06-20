@@ -33,6 +33,16 @@ All notable changes to this project are documented here. Format follows
   below AA on dark-theme card backgrounds (3.9–4.3:1). Adjusted to
   pass 6:1+ everywhere while staying visibly brighter than the fixed
   `--t3`, preserving the text/t2/t3 hierarchy
+- Container Volume Planner's "Calculate" button silently did nothing
+  if a dimension field was empty — now shows an inline message
+  instead of no feedback
+- Light/dark theme preference is now saved to `localStorage` and
+  restored on reload instead of always resetting to dark
+
+### Removed
+- Dead CSS: an unused dispute-phase accordion component, an unused
+  "Typical timeline" row variant superseded by `.bank-row`, and an
+  unused nav "NEW" badge style — none were ever applied in markup
 
 ## [1.0.0] - 2026-06-20
 
