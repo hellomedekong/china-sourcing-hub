@@ -136,6 +136,7 @@ body.light .cc:hover{box-shadow:0 6px 20px rgba(20,50,110,.12)}
 .tr-city{font-size:11px;font-weight:600;color:var(--txt);display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tr-mkt{font-size:9.5px;color:var(--t3);display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
 .tr-p{font-size:8.5px;font-weight:700;color:var(--gold);opacity:.85;display:block;margin-top:2px}
+.tr-more{font-size:9px;color:var(--t3);font-weight:600;padding-left:64px;margin-top:1px}
 /* ─── CARD FOOTER ───────────────────────────────────────── */
 .cf{padding:7px 14px 11px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--bd)}
 .ptags{display:flex;gap:3px;flex-wrap:wrap}
@@ -1096,8 +1097,8 @@ function renderCats(){
     const cid='c'+c.id;
     const isOpen=openCards.has(c.id);
 
-    // Compact tier rows on card face
-    const tierRows=c.tiers.map(t=>`
+    // Compact tier rows on card face — cheapest tier only, rest revealed on expand
+    const tierRows=c.tiers.slice(0,1).map(t=>`
       <div class="tr">
         <span class="ttg ${t.l}">${tlbl(t.l)}</span>
         <div class="tr-r">
@@ -1105,7 +1106,8 @@ function renderCats(){
           <span class="tr-mkt">${trunc(t.mkt,42)}</span>
           <span class="tr-p">${t.price}</span>
         </div>
-      </div>`).join('');
+      </div>`).join('')
+      +(c.tiers.length>1?`<div class="tr-more">+${c.tiers.length-1} more pricing tier${c.tiers.length>2?'s':''} — tap for full breakdown</div>`:'');
 
     // Platform tags (compact face)
     const ptags=c.ps.map(p=>`<span class="ptag">${p}</span>`).join('');

@@ -6,6 +6,13 @@ All notable changes to this project are documented here. Format follows
 
 ## [Unreleased]
 
+### Changed
+- Category cards now show only the cheapest pricing tier on the face,
+  with a "+N more pricing tiers" hint, instead of all 3 tiers always
+  expanded — cuts default card height substantially (~12 cards fit
+  in the same viewport that previously fit ~9) without removing any
+  data; full tier breakdown is unchanged in the expanded detail view
+
 ### Fixed
 - Onboarding wizard "Edit profile" button referenced a nonexistent
   element ID and silently failed to reopen the wizard or reset filters
