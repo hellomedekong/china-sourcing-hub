@@ -695,7 +695,7 @@ body.light .cc:hover{box-shadow:0 6px 20px rgba(20,50,110,.12)}
       <option value="cf">Canton</option>
     </select>
   </div>
-  <div class="rct" id="rct"></div>
+  <div class="rct" id="rct" aria-live="polite"></div>
 </div>
 
 <main>
@@ -1765,7 +1765,7 @@ function renderGlossary(terms){
   no.style.display='none';
   list.innerHTML=terms.map((g,i)=>`
     <div class="gterm" id="gt${i}">
-      <div class="gterm-top" onclick="toggleGterm(${i})" role="button" aria-expanded="false" aria-controls="gtb${i}">
+      <div class="gterm-top" onclick="toggleGterm(${i})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleGterm(${i})}" role="button" tabindex="0" aria-expanded="false" aria-controls="gtb${i}">
         <span class="gterm-abbr">${g.t}</span>
         <span class="gterm-full">${g.f}</span>
         <span class="gterm-arr">›</span>
@@ -2326,13 +2326,13 @@ function docChecklistHTML(){
     }).join('');
     const done=st.items.filter((_,i)=>doneItems.has('di'+st.n+'x'+i)).length;
     return '<div class="doc-stage" id="dstage'+st.n+'">'
-      +'<div class="doc-stage-head" onclick="toggleDocStage('+st.n+')">'
+      +'<div class="doc-stage-head" role="button" tabindex="0" aria-expanded="false" aria-controls="dstageBody'+st.n+'" onclick="toggleDocStage('+st.n+')" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();toggleDocStage('+st.n+')}">'
       +'<span class="ds-num">'+st.n+'</span>'
       +'<span class="ds-title">'+st.title+'</span>'
       +'<span class="ds-count" id="dsc'+st.n+'">'+done+'/'+st.items.length+' done</span>'
       +'<span class="ds-arr">›</span>'
       +'</div>'
-      +'<div class="doc-stage-body">'+items+'</div>'
+      +'<div class="doc-stage-body" id="dstageBody'+st.n+'">'+items+'</div>'
       +'</div>';
   }).join('');
   const totalDone=doneItems.size;
@@ -2348,11 +2348,18 @@ function docChecklistHTML(){
 function initDocChecklist(){
   // Open stage 1 by default
   const s1=document.getElementById('dstage1');
-  if(s1)s1.classList.add('open');
+  if(s1){
+    s1.classList.add('open');
+    const head=s1.querySelector('.doc-stage-head');
+    if(head)head.setAttribute('aria-expanded','true');
+  }
 }
 function toggleDocStage(n){
   const el=document.getElementById('dstage'+n);
-  if(el)el.classList.toggle('open');
+  if(!el)return;
+  const isOpen=el.classList.toggle('open');
+  const head=el.querySelector('.doc-stage-head');
+  if(head)head.setAttribute('aria-expanded',String(isOpen));
 }
 function tickDoc(uid){
   const item=document.getElementById(uid);
