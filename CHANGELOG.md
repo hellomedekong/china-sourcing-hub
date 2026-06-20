@@ -4,6 +4,21 @@ All notable changes to this project are documented here. Format follows
 [Keep a Changelog](https://keepachangelog.com/), versioning follows
 [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Fixed
+- Onboarding wizard "Edit profile" button referenced a nonexistent
+  element ID and silently failed to reopen the wizard or reset filters
+- Wizard form stayed visible after submitting a personalised plan
+- Switching tabs no longer preserves scroll position from the previous
+  tab — now resets to top
+- Agent-vetting and import-document checklist progress is now saved to
+  `localStorage` and restored on reload
+- Fixed a CSS Grid bug where two/three-column layouts (Logistics,
+  Tools, Agents, Import Process, Safety & Disputes) could grow wider
+  than the viewport on mobile instead of collapsing to one column,
+  causing horizontal scroll/clipped content on phones
+
 ## [1.0.0] - 2026-06-20
 
 ### Added
