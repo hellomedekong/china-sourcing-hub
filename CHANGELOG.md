@@ -12,6 +12,12 @@ All notable changes to this project are documented here. Format follows
   expanded — cuts default card height substantially (~12 cards fit
   in the same viewport that previously fit ~9) without removing any
   data; full tier breakdown is unchanged in the expanded detail view
+- Filter bar collapsed: Region/Tier/Compliance pills and the Sort
+  dropdown are now hidden behind a single "Filters" toggle button
+  instead of always visible, cutting the bar down to one compact row
+  (search + Filters + result count). The button shows a gold badge
+  with the active-filter count even while collapsed, so an applied
+  filter is never invisible. No filtering behaviour changed.
 
 ### Fixed
 - Onboarding wizard "Edit profile" button referenced a nonexistent

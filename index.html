@@ -90,6 +90,14 @@ button{cursor:pointer;font-family:inherit}
 .pl.son.on{background:var(--snb);border-color:var(--son);color:var(--son)}
 .srt{background:var(--s2);border:1px solid var(--bd2);border-radius:var(--rsm);color:var(--t2);font-family:'Plus Jakarta Sans',sans-serif;font-size:8.5px;font-weight:700;padding:5px 8px;outline:none;cursor:pointer;transition:background .3s}
 .rct{margin-left:auto;font-size:8.5px;font-weight:700;color:var(--t3);white-space:nowrap}
+.filt-btn{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:var(--rsm);border:1px solid var(--bd2);background:var(--s2);color:var(--t2);font-size:11px;font-weight:700;cursor:pointer;transition:all .15s;white-space:nowrap;flex-shrink:0}
+.filt-btn:hover{border-color:var(--t2);color:var(--txt)}
+.filt-btn.has-active{border-color:var(--gold);color:var(--gold);background:var(--gbg)}
+.filt-badge{background:var(--gold);color:#000;font-size:9px;font-weight:800;padding:1px 6px;border-radius:9px;min-width:14px;text-align:center}
+.filt-arr{font-size:9px;color:var(--t3);transition:transform .2s}
+.filt-btn.open .filt-arr{transform:rotate(180deg)}
+.filt-panel{display:none;background:var(--s1);border-bottom:1px solid var(--bd);padding:10px 24px;gap:8px;align-items:center;flex-wrap:wrap;transition:background .3s}
+.filt-panel.open{display:flex}
 /* ─── PANELS ────────────────────────────────────────────── */
 .panel{display:none}
 .panel.on{display:block}
@@ -653,6 +661,12 @@ body.light .cc:hover{box-shadow:0 6px 20px rgba(20,50,110,.12)}
 
 <div id="fbar">
   <div class="sw"><span class="si">🔍</span><input type="text" id="srch" placeholder="Search categories, cities, products…" oninput="doSearch(this.value)"></div>
+  <button class="filt-btn" id="filtBtn" onclick="toggleFilters()" aria-expanded="false" aria-controls="filt-panel">
+    <span>⚙️ Filters</span><span class="filt-badge" id="filtBadge" style="display:none">0</span><span class="filt-arr">▾</span>
+  </button>
+  <div class="rct" id="rct" aria-live="polite"></div>
+</div>
+<div class="filt-panel" id="filt-panel">
   <div class="fg">
     <span class="fl">Region</span>
     <button class="pl on" data-g="rg" data-v="all" onclick="setPill('rg','all',this)">All</button>
@@ -675,13 +689,12 @@ body.light .cc:hover{box-shadow:0 6px 20px rgba(20,50,110,.12)}
   </div>
   <div class="fg">
     <span class="fl">Sort</span>
-    <select class="srt" onchange="F.sort=this.value;renderCats()">
+    <select class="srt" onchange="F.sort=this.value;renderCats();updateFilterBadge()">
       <option value="name">A–Z</option>
       <option value="rg">Region</option>
       <option value="cf">Canton</option>
     </select>
   </div>
-  <div class="rct" id="rct" aria-live="polite"></div>
 </div>
 
 <main>
@@ -1055,6 +1068,23 @@ function setPill(group,val,btn){
   F[group]=val;
   document.querySelectorAll(`.pl[data-g="${group}"]`).forEach(p=>p.classList.toggle('on',p===btn));
   renderCats();
+  updateFilterBadge();
+}
+function toggleFilters(){
+  const panel=document.getElementById('filt-panel');
+  const btn=document.getElementById('filtBtn');
+  const isOpen=panel.classList.toggle('open');
+  btn.classList.toggle('open',isOpen);
+  btn.setAttribute('aria-expanded',String(isOpen));
+}
+function updateFilterBadge(){
+  const active=['rg','tr','cp'].filter(k=>F[k]!=='all').length+(F.sort!=='name'?1:0);
+  const badge=document.getElementById('filtBadge');
+  const btn=document.getElementById('filtBtn');
+  if(!badge||!btn)return;
+  badge.style.display=active>0?'inline-block':'none';
+  badge.textContent=active;
+  btn.classList.toggle('has-active',active>0);
 }
 
 /* ── FILTERED + SORTED CATS ──────────────────────────────── */
@@ -1894,6 +1924,7 @@ function applyWizard(){
   if(budget==='small') { F.tr='bud'; document.querySelectorAll('.pl[data-g="tr"]').forEach(p=>p.classList.toggle('on',p.dataset.v==='bud')); }
   if(budget==='large') { F.tr='all'; }
   renderCats();
+  updateFilterBadge();
 
   // Build personalised plan
   const steps=buildPlan(cat,budget,how);
@@ -1934,6 +1965,7 @@ function resetWizard(){
   F.rg='all';F.tr='all';F.cp='all';
   document.querySelectorAll('.pl').forEach(p=>p.classList.toggle('on',p.dataset.v==='all'));
   renderCats();
+  updateFilterBadge();
 }
 
 function buildPlan(cat,budget,how){
