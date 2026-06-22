@@ -745,15 +745,16 @@ body.light .cc:hover{box-shadow:0 6px 20px rgba(20,50,110,.12)}
     </div>
     <div id="cgrid"></div>
     <div id="nores"><div class="nr-i">🔍</div><h3>No matches</h3><p>Try a different search or filter</p></div>
+    <div id="cta-cats" style="padding:0 24px 52px"></div>
   </div>
   <div id="p-plats" class="panel"><div class="pin"><div class="ph">Online Sourcing Platforms</div><div class="psb">Supplement in-person visits with remote purchasing — start with samples, scale with Trade Assurance</div>
     <div class="bp-prog"><h3>🎯 Recommended Buyer Journey</h3><div class="bp-prog-steps"><span class="bpps">AliExpress</span><span class="bppa">→</span><span class="bpps">DHgate</span><span class="bppa">→</span><span class="bpps">Alibaba + Trade Assurance</span><span class="bppa">→</span><span class="bpps">1688 via Agent</span></div><div class="bppd">1-unit samples → small batches → bulk with escrow → factory-direct pricing (20–50% cheaper)</div></div>
-    <div class="pg" id="pg"></div></div></div>
-  <div id="p-agents" class="panel"><div class="pin"><div class="ph">Agents & Payment Guide</div><div class="psb">How to find, vet, and pay — without hidden kickbacks eating your margins</div><div class="ag" id="ag"></div></div></div>
-  <div id="p-logistics" class="panel"><div class="pin"><div class="ph">Logistics & Canton Fair</div><div class="psb">Canton Fair 2026 schedule, navigation guide, shipping options, Nigeria import notes, and a live RMB converter</div><div class="lg" id="lg"></div></div></div>
+    <div class="pg" id="pg"></div><div id="cta-plats" style="margin-top:14px"></div></div></div>
+  <div id="p-agents" class="panel"><div class="pin"><div class="ph">Agents & Payment Guide</div><div class="psb">How to find, vet, and pay — without hidden kickbacks eating your margins</div><div class="ag" id="ag"></div><div id="cta-agents" style="margin-top:14px"></div></div></div>
+  <div id="p-logistics" class="panel"><div class="pin"><div class="ph">Logistics & Canton Fair</div><div class="psb">Canton Fair 2026 schedule, navigation guide, shipping options, Nigeria import notes, and a live RMB converter</div><div class="lg" id="lg"></div><div id="cta-logistics" style="margin-top:14px"></div></div></div>
   <div id="p-import" class="panel"><div class="pin"><div class="ph">Import Process Guide</div><div class="psb">Every document, every step, every cost — from placing your order in China to collecting your goods at Apapa</div><div id="import-content"></div></div></div>
-  <div id="p-buyer" class="panel"><div class="pin"><div class="ph">Safety &amp; Disputes</div><div class="psb">The most common ways Nigerian importers lose money from China — and exactly how to avoid each one</div><div id="bp"></div></div></div>
-  <div id="p-tools" class="panel"><div class="pin" id="main-content"><div class="ph">Tools & Glossary</div><div class="psb">Everything you need to calculate, communicate, and understand — purpose-built for the Nigerian China buyer</div><div id="tools-content"></div></div></div>
+  <div id="p-buyer" class="panel"><div class="pin"><div class="ph">Safety &amp; Disputes</div><div class="psb">The most common ways Nigerian importers lose money from China — and exactly how to avoid each one</div><div id="bp"></div><div id="cta-buyer" style="margin-top:14px"></div></div></div>
+  <div id="p-tools" class="panel"><div class="pin" id="main-content"><div class="ph">Tools & Glossary</div><div class="psb">Everything you need to calculate, communicate, and understand — purpose-built for the Nigerian China buyer</div><div id="tools-content"></div><div id="cta-tools" style="margin-top:14px"></div></div></div>
 </main>
 
 <script>
@@ -1263,6 +1264,7 @@ function renderPlats(){
       <div style="margin-top:7px"><a href="${p.url}" target="_blank" rel="noopener" style="font-size:8.5px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.06em">Visit ${p.name} →</a></div>
     </div>`;
   }).join('');
+  document.getElementById('cta-plats').innerHTML=consultCtaHTML('plats');
 }
 
 /* ── RENDER AGENTS ───────────────────────────────────────── */
@@ -1307,6 +1309,7 @@ function renderAgents(){
         ${pays.map(p=>`<div class="payrow"><span class="pay-ico">${p.ico}</span><div><div class="pay-nm">${p.nm}</div><div class="pay-d">${p.d}</div><div class="pay-tip">${p.tip}</div></div></div>`).join('')}
       </div>
     </div>`;
+  document.getElementById('cta-agents').innerHTML=consultCtaHTML('agents');
 }
 function tck(i){const it=document.getElementById('cl'+i);const b=document.getElementById('cb'+i);if(checkedItems.has(i)){checkedItems.delete(i);it.classList.remove('done');b.textContent='';}else{checkedItems.add(i);it.classList.add('done');b.textContent='✓';}saveSet('csh_checkedItems',checkedItems);}
 
@@ -1352,6 +1355,7 @@ function renderLogistics(){
         <div class="conv-note">Update rate fields above to match current market rate. Check xe.com or your bank.</div>
       </div>
     </div>`;
+  document.getElementById('cta-logistics').innerHTML=consultCtaHTML('logistics');
 }
 function doConv(){
   const a=parseFloat(document.getElementById('cAmt').value)||0;
@@ -1389,6 +1393,7 @@ function renderBuyer(){
         <div class="pnt" style="margin-top:9px">Use AQL 2.5 sampling standard (ISO 2859-1). Hire SGS, QIMA, or Bureau Veritas for orders above $10,000. Cost: ~$200–$400/day — worth every naira.</div>
       </div>
     </div>`;
+  document.getElementById('cta-buyer').innerHTML=consultCtaHTML('buyer');
 }
 
 
@@ -1662,6 +1667,7 @@ function renderTools(){
   initCalc();
   initGlossary();
   initTemplates();
+  document.getElementById('cta-tools').innerHTML=consultCtaHTML('tools');
 }
 
 /* ── CALCULATOR ──────────────────────────────────── */
@@ -2305,19 +2311,128 @@ let totalDocItems=0;
 function renderImportProcess(){
   const el=document.getElementById('import-content');
   if(!el)return;
-  el.innerHTML='<div class="ip-grid">'+docChecklistHTML()+portClearingHTML()+'</div><div class="ip-grid" style="margin-top:14px">'+retailViabilityHTML()+'</div><div class="ip-grid" style="margin-top:14px">'+consultCtaHTML()+'</div>';
+  el.innerHTML='<div class="ip-grid">'+docChecklistHTML()+portClearingHTML()+'</div><div class="ip-grid" style="margin-top:14px">'+retailViabilityHTML()+'</div><div class="ip-grid" style="margin-top:14px">'+consultCtaHTML('import')+'</div>';
   initDocChecklist();
   initRetailCalc();
 }
 
-/* ── SOURCING CONSULTATION CTA ────────────────────── */
-function consultCtaHTML(){
-  return '<div class="ipc sp" style="text-align:center">'
+/* ══════════════════════════════════════════════════
+   SOURCING CONSULTATION CTA — gated intake form
+   Reuses the onboarding wizard's category/budget data and
+   .wiz-q/.wopt/.wiz-go components so it feels like one system.
+══════════════════════════════════════════════════ */
+const consultState={};
+function getConsultState(tabKey){
+  if(!consultState[tabKey])consultState[tabKey]={cat:null,budget:null,exp:null,urgency:null,contact:null,detail:''};
+  return consultState[tabKey];
+}
+function consultCtaHTML(tabKey){
+  return '<div class="ipc sp" id="consult-'+tabKey+'">'
     +'<div class="ipc-t">🤝 Sourcing Support</div>'
-    +'<div class="tc-h">Want This Handled For You?</div>'
-    +'<div class="tc-sub" style="max-width:560px;margin-left:auto;margin-right:auto">Everything above is what we handle directly for clients who\'d rather not navigate it alone — supplier vetting, payment safety, inspection booking, and customs clearing coordination, start to finish. Book a paid consultation and skip the learning curve.</div>'
-    +'<a href="https://wa.me/18035409098" target="_blank" rel="noopener" class="cta-btn">Book a Sourcing Consultation →</a>'
+    +'<div id="consult-'+tabKey+'-intro" style="text-align:center">'
+      +'<div class="tc-h">Want This Handled For You?</div>'
+      +'<div class="tc-sub" style="max-width:560px;margin:0 auto 14px">Everything above is what we handle directly for clients who\'d rather not navigate it alone — supplier vetting, payment safety, inspection booking, and customs clearing coordination, start to finish. Book a paid consultation and skip the learning curve.</div>'
+      +'<button class="cta-btn" onclick="consultOpen(\''+tabKey+'\')">Book a Sourcing Consultation →</button>'
+    +'</div>'
+    +'<div id="consult-'+tabKey+'-form" style="display:none">'
+      +'<div class="tc-sub" style="text-align:center;margin-bottom:14px">Answer a few quick questions so we know exactly how to help — we\'ll open WhatsApp with your brief ready to send.</div>'
+      +'<div class="wiz-q"><div class="wiz-ql">1 — What are you looking to import?</div>'
+        +'<div class="wiz-opts">'
+          +'<button class="wopt" onclick="consultPick(\''+tabKey+'\',\'cat\',\'tech\',this)">⚡ Electronics &amp; Tech</button>'
+          +'<button class="wopt" onclick="consultPick(\''+tabKey+'\',\'cat\',\'fashion\',this)">👗 Fashion &amp; Textiles</button>'
+          +'<button class="wopt" onclick="consultPick(\''+tabKey+'\',\'cat\',\'beauty\',this)">💄 Beauty &amp; Wellness</button>'
+          +'<button class="wopt" onclick="consultPick(\''+tabKey+'\',\'cat\',\'home\',this)">🏠 Home &amp; Living</button>'
+          +'<button class="wopt" onclick="consultPick(\''+tabKey+'\',\'cat\',\'toys\',this)">🎁 Toys &amp; Gifts</button>'
+          +'<button class="wopt" onclick="consultPick(\''+tabKey+'\',\'cat\',\'industry\',this)">⚙️ Industry &amp; Auto</button>'
+          +'<button class="wopt" onclick="consultPick(\''+tabKey+'\',\'cat\',\'accessories\',this)">💎 Accessories &amp; Jewellery</button>'
+          +'<button class="wopt" onclick="consultPick(\''+tabKey+'\',\'cat\',\'general\',this)">🛍️ General / Mixed</button>'
+        +'</div></div>'
+      +'<div class="wiz-q"><div class="wiz-ql">2 — Estimated import budget?</div>'
+        +'<div class="wiz-opts">'
+          +'<button class="wopt" onclick="consultPick(\''+tabKey+'\',\'budget\',\'small\',this)">Under $5,000</button>'
+          +'<button class="wopt" onclick="consultPick(\''+tabKey+'\',\'budget\',\'mid\',this)">$5,000 – $30,000</button>'
+          +'<button class="wopt" onclick="consultPick(\''+tabKey+'\',\'budget\',\'large\',this)">Above $30,000</button>'
+        +'</div></div>'
+      +'<div class="wiz-q"><div class="wiz-ql">3 — Have you imported from China before?</div>'
+        +'<div class="wiz-opts">'
+          +'<button class="wopt" onclick="consultPick(\''+tabKey+'\',\'exp\',\'first\',this)">First time</button>'
+          +'<button class="wopt" onclick="consultPick(\''+tabKey+'\',\'exp\',\'redo\',this)">Done it before, want it managed better</button>'
+        +'</div></div>'
+      +'<div class="wiz-q"><div class="wiz-ql">4 — How urgent is this?</div>'
+        +'<div class="wiz-opts">'
+          +'<button class="wopt" onclick="consultPick(\''+tabKey+'\',\'urgency\',\'2weeks\',this)">Need to move within 2 weeks</button>'
+          +'<button class="wopt" onclick="consultPick(\''+tabKey+'\',\'urgency\',\'months\',this)">Within 1–2 months</button>'
+          +'<button class="wopt" onclick="consultPick(\''+tabKey+'\',\'urgency\',\'exploring\',this)">Just exploring</button>'
+        +'</div></div>'
+      +'<div class="wiz-q"><div class="wiz-ql">5 — Best way to reach you?</div>'
+        +'<div class="wiz-opts">'
+          +'<button class="wopt" onclick="consultPick(\''+tabKey+'\',\'contact\',\'whatsapp\',this)">WhatsApp</button>'
+          +'<button class="wopt" onclick="consultPick(\''+tabKey+'\',\'contact\',\'email\',this)">Email</button>'
+          +'<button class="wopt" onclick="consultPick(\''+tabKey+'\',\'contact\',\'phone\',this)">Phone</button>'
+        +'</div>'
+        +'<input type="text" id="consult-'+tabKey+'-detail" class="calc-inp" style="display:none;margin-top:8px;max-width:320px" oninput="consultDetailInput(\''+tabKey+'\',this.value)">'
+      +'</div>'
+      +'<button class="wiz-go" id="consult-'+tabKey+'-submit" disabled style="opacity:.4;cursor:not-allowed" onclick="consultSubmit(\''+tabKey+'\')">Answer all questions to continue →</button>'
+    +'</div>'
+    +'<div id="consult-'+tabKey+'-done" style="display:none;text-align:center">'
+      +'<div class="tc-h">✅ Brief ready</div>'
+      +'<div class="tc-sub">WhatsApp should have opened in a new tab with your details pre-filled. Didn\'t open? <a href="#" id="consult-'+tabKey+'-retry" target="_blank" rel="noopener" style="color:var(--gold);font-weight:700">Tap here</a>.</div>'
+    +'</div>'
     +'</div>';
+}
+function consultOpen(tabKey){
+  document.getElementById('consult-'+tabKey+'-intro').style.display='none';
+  document.getElementById('consult-'+tabKey+'-form').style.display='block';
+}
+function consultPick(tabKey,group,val,btn){
+  const st=getConsultState(tabKey);
+  st[group]=val;
+  btn.closest('.wiz-opts').querySelectorAll('.wopt').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+  if(group==='contact'){
+    const detailInp=document.getElementById('consult-'+tabKey+'-detail');
+    if(val==='email'){detailInp.style.display='block';detailInp.placeholder='Your email address';detailInp.type='email';}
+    else if(val==='phone'){detailInp.style.display='block';detailInp.placeholder='Your phone number';detailInp.type='tel';}
+    else{detailInp.style.display='none';detailInp.value='';st.detail='';}
+  }
+  consultUpdateGate(tabKey);
+}
+function consultDetailInput(tabKey,val){
+  getConsultState(tabKey).detail=val;
+  consultUpdateGate(tabKey);
+}
+function consultUpdateGate(tabKey){
+  const st=getConsultState(tabKey);
+  const needsDetail=st.contact==='email'||st.contact==='phone';
+  const ready=!!(st.cat&&st.budget&&st.exp&&st.urgency&&st.contact&&(!needsDetail||st.detail.trim()));
+  const btn=document.getElementById('consult-'+tabKey+'-submit');
+  if(!btn)return;
+  btn.disabled=!ready;
+  btn.style.opacity=ready?'1':'.4';
+  btn.style.cursor=ready?'pointer':'not-allowed';
+  btn.textContent=ready?'Send Brief & Open WhatsApp →':'Answer all questions to continue →';
+}
+function consultSubmit(tabKey){
+  const st=getConsultState(tabKey);
+  const needsDetail=st.contact==='email'||st.contact==='phone';
+  if(!st.cat||!st.budget||!st.exp||!st.urgency||!st.contact||(needsDetail&&!st.detail.trim()))return;
+  const catLabels={tech:'Electronics & Tech',fashion:'Fashion & Textiles',beauty:'Beauty & Wellness',home:'Home & Living',toys:'Toys & Gifts',industry:'Industry & Auto',accessories:'Accessories & Jewellery',general:'General / Mixed'};
+  const budgetLabels={small:'Under $5,000',mid:'$5,000 – $30,000',large:'Above $30,000'};
+  const expLabels={first:'First time importing',redo:'Imported before, wants it managed better'};
+  const urgencyLabels={'2weeks':'Needs to move within 2 weeks',months:'Within 1–2 months',exploring:'Just exploring for now'};
+  const contactLabels={whatsapp:'WhatsApp (this chat)',email:'Email — '+st.detail,phone:'Phone — '+st.detail};
+  const msg='Hi, I\'d like a paid sourcing consultation.\n\n'
+    +'Looking to import: '+catLabels[st.cat]+'\n'
+    +'Budget: '+budgetLabels[st.budget]+'\n'
+    +'Experience: '+expLabels[st.exp]+'\n'
+    +'Timeline: '+urgencyLabels[st.urgency]+'\n'
+    +'Best contact: '+contactLabels[st.contact];
+  const url='https://wa.me/18035409098?text='+encodeURIComponent(msg);
+  window.open(url,'_blank','noopener');
+  document.getElementById('consult-'+tabKey+'-form').style.display='none';
+  document.getElementById('consult-'+tabKey+'-done').style.display='block';
+  const retry=document.getElementById('consult-'+tabKey+'-retry');
+  if(retry)retry.href=url;
 }
 
 /* ── DOCUMENT CHECKLIST ──────────────────────────── */
@@ -2613,6 +2728,7 @@ function runRetail(){
 
 /* ── BOOT ──────────────────────────── */
 renderCats();
+document.getElementById('cta-cats').innerHTML=consultCtaHTML('cats');
 </script>
 <nav id="botnav" aria-label="Bottom navigation">
   <button class="bnt on" data-p="cats" onclick="showP('cats');syncBot('cats')"><span class="bnt-i">📦</span>Categories</button>

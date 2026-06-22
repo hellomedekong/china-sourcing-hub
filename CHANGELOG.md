@@ -7,9 +7,17 @@ All notable changes to this project are documented here. Format follows
 ## [Unreleased]
 
 ### Added
-- "Want This Handled For You?" CTA card at the bottom of the Import
-  Process tab, after the Retail Viability Guide — links out to a paid
-  sourcing consultation booking link. Plain card, no popup or modal.
+- "Want This Handled For You?" sourcing consultation CTA card, now on
+  the bottom of all 7 tabs (not just Import Process) so it's visible
+  regardless of which part of the dashboard someone is browsing
+- The CTA is gated: clicking it reveals a 5-question intake form
+  (import category, budget, prior experience, urgency, preferred
+  contact method) reusing the onboarding wizard's exact question/
+  option styling. The WhatsApp link only activates once all 5 are
+  answered, and the answers are packed into a pre-filled WhatsApp
+  message so the brief arrives with the booking request — filtering
+  for buyers serious enough to answer, and giving full context
+  upfront instead of a cold "hi"
 
 ### Changed
 - Category cards now show only the cheapest pricing tier on the face,
